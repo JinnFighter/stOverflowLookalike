@@ -1,0 +1,10 @@
+ Questions:
+ <br>
+ <% if !@questions.empty? %>
+  <% @questions.each do |q| %>
+      <%= link_to q.title, q %><br>
+      answers:
+      <%= q.answers.count %> <br>
+  <% end %>
+<% end %>
+<%= link_to 'New Question', new_question_path %>

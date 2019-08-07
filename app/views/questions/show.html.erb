@@ -1,0 +1,13 @@
+<%= link_to 'Back', questions_path %><br>
+
+ <%= @question.title %><br>
+ <%= @question.body %><br>
+
+ <%= button_to 'Create Answer', new_answer_path, :method => :get, params: {:question_id => @question} %>
+
+  <% if !@question.answers.empty? %>
+  Answers: <br>
+    <% @question.answers.each do |a| %>
+    <p><%= a.body %></p>
+    <% end %>
+  <% end %>

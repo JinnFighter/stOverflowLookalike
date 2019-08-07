@@ -1,0 +1,4 @@
+<%= form_with model: @answer do |form| %>
+  <%= form.text_area :body, size: "25x12" %>
+  <%= form.button :submit, name: 'question_id', value: params[:question_id] %>
+ <% end %>
