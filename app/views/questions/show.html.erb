@@ -1,13 +1,25 @@
 <%= link_to 'Back', questions_path %><br>
-
+<%= button_to 'Delete question', @question, method: :delete  %>
+<div id='question_data'>
  <%= @question.title %><br>
  <%= @question.body %><br>
+</div>
+ <%= form_with model: Answer do |form| %>
+   <%= form.text_area :body, size: "25x12", id: 'Answer_to_question' %>
+   <% if(!current_user.nil?) %>
+    <%= form.hidden_field :user_id, value: current_user.id %>
+   <% end %>
+    <%= form.button :submit, name: 'question_id', value: @question.id, id:'Send answer' %>
+  <% end %>
 
- <%= button_to 'Create Answer', new_answer_path, :method => :get, params: {:question_id => @question} %>
-
+<div id='answers'>
   <% if !@question.answers.empty? %>
   Answers: <br>
     <% @question.answers.each do |a| %>
     <p><%= a.body %></p>
+    <%= button_to 'Delete this answer', a, {id: "delete_answer_#{a.id}", method: :delete} %>
     <% end %>
+    <% else %>
+
   <% end %>
+</div>

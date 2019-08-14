@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:answer) { create(:answer_to_question) }
+  let(:answer) { create(:answer_to_question, user: @user) }
 
   describe "GET index" do
     let(:answers) { create_list(:answer, 2)}
@@ -28,6 +28,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     describe "GET new" do
+      sign_in_user
       before { get :new }
 
       it 'assigns a new Answer to @answer' do
@@ -40,6 +41,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     describe "GET edit" do
+      sign_in_user
       before {get :edit, params: { id:answer }}
 
       it 'assign the requested answer to @answer' do
@@ -52,7 +54,9 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     describe "POST create" do
-      let(:parent_question) {FactoryGirl.create(:question)}
+      sign_in_user
+      let(:parent_question) { FactoryGirl.create(:question) }
+
       context 'with valid attributes' do
 
         it 'saves new answer in the database' do
@@ -78,6 +82,8 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     describe "PATCH update" do
+      sign_in_user
+
       context 'valid attributes' do
         it 'assigns the requested answer to @answer' do
           patch :update, params: {id: answer, answer: attributes_for(:answer)}
@@ -112,6 +118,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     describe "DELETE destroy" do
+      sign_in_user
       before {answer}
 
       it 'deletes answer' do

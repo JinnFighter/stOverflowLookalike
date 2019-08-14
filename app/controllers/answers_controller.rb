@@ -1,4 +1,5 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :load_answer, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -13,6 +14,7 @@ class AnswersController < ApplicationController
     @question = Question.find(params[:question_id])
     @answer = @question.answers.new(answer_params)
     if @answer.save
+      flash[:notice] = 'Your answer was successfully added.'
       redirect_to @question
     else
       render :new
@@ -36,7 +38,12 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer.destroy
+    if @answer.user_id == current_user.id
+      @answer.destroy
+      flash[:notice] = 'Your answer was successfully deleted.'
+    else
+      flash[:notice] = "You can\'\ t delete answers you haven\'\ t created."
+    end
     redirect_to answers_path
   end
   private
