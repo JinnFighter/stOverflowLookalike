@@ -1,0 +1,7 @@
+<% if !@question.answers.empty? %>
+Answers: <br>
+  <% @question.answers.each do |a| %>
+    <p><%= a.body %></p>
+    <%= button_to 'Delete this answer', a, {id: "delete_answer_#{a.id}", method: :delete} %>
+  <% end %>
+<% end %>

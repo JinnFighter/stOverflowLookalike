@@ -4,7 +4,10 @@
  <%= @question.title %><br>
  <%= @question.body %><br>
 </div>
- <%= form_with model: Answer do |form| %>
+
+<div id='answers'>
+ <%= form_for @answer, remote: true do |form| %>
+  <%= form.label :body, 'Your answer:' %>
    <%= form.text_area :body, size: "25x12", id: 'Answer_to_question' %>
    <% if(!current_user.nil?) %>
     <%= form.hidden_field :user_id, value: current_user.id %>
@@ -12,14 +15,5 @@
     <%= form.button :submit, name: 'question_id', value: @question.id, id:'Send answer' %>
   <% end %>
 
-<div id='answers'>
-  <% if !@question.answers.empty? %>
-  Answers: <br>
-    <% @question.answers.each do |a| %>
-    <p><%= a.body %></p>
-    <%= button_to 'Delete this answer', a, {id: "delete_answer_#{a.id}", method: :delete} %>
-    <% end %>
-    <% else %>
-
-  <% end %>
+  <%= render 'answers' %>
 </div>
