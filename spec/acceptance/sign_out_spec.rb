@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'acceptance_helper'
 
 feature 'User sign out', %q{
 In order to be able to change accounts
@@ -10,7 +10,7 @@ I want to be able to sign out
   scenario 'Authenticated user signs out' do
     visit questions_path
     click_on 'Sign out'
-    
+
     expect(page).to have_content 'Signed out successfully.'
   end
 end

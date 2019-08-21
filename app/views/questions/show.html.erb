@@ -8,6 +8,9 @@
 <div id='answers'>
  <%= form_for @answer, remote: true do |form| %>
   <%= form.label :body, 'Your answer:' %>
+   <div class='answer_errors'>
+
+    </div>
    <%= form.text_area :body, size: "25x12", id: 'Answer_to_question' %>
    <% if(!current_user.nil?) %>
     <%= form.hidden_field :user_id, value: current_user.id %>

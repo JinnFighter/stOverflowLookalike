@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'acceptance_helper'
 
 feature 'User register', %q{
   In order to be able to ask questions and/or provide answers
