@@ -10,8 +10,9 @@
   </head>
 
   <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <div id="flash">
+      <%= render partial: "shared/notice_banner" %>
+    </div>
     <%= yield %>
   </body>
 </html>

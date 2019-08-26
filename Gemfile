@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+source 'https://rails-assets.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.1'
@@ -54,6 +55,8 @@ group :development, :test do
   gem 'capybara'
   gem 'database_cleaner'
   gem 'capybara-webkit'
+  gem 'poltergeist'
+  gem 'rails-assets-bind-polyfill'
 end
 
 group :development do

@@ -19,10 +19,14 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if @answer.update(answer_params)
-      redirect_to @answer
+    @answer = Answer.find(params[:id])
+    @question = @answer.question
+    if current_user.id == @answer.user_id
+      @answer.update(answer_params)
     else
-      render :edit
+      respond_to do |format|
+        format.js { flash.now[:notice] = 'You cannot edit answers you have not created.' }
+      end
     end
   end
 
@@ -43,6 +47,7 @@ class AnswersController < ApplicationController
     end
     redirect_to answers_path
   end
+
   private
 
   def load_answer

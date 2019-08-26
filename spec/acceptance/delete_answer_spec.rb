@@ -6,16 +6,17 @@ feature 'Delete answer', %q{
   I want to be able to delete my answers
  } do
    given(:user) { create(:user) }
-   given(:question) { create(:question, :with_answers_from_many_users, user: user) }
-   given(:answer) { question.answers[0] }
-   given(:other_answer) { question.answers[1] }
+   given!(:question) { create(:question) }
+   given!(:answer) { create :answer, question: question, user: user }
+   given!(:other_answer) { create :answer, question: question }
 
    scenario 'Authenticated user deletes his answer' do
      sign_in(user)
 
      visit "questions/#{question.id}"
+     within "#answers" do
      click_on "delete_answer_#{answer.id}"
-
+   end
      expect(page).to have_content 'Your answer was successfully deleted.'
    end
 
@@ -23,15 +24,11 @@ feature 'Delete answer', %q{
      sign_in(user)
 
      visit "questions/#{question.id}"
-     click_on "delete_answer_#{other_answer.id}"
-
-     expect(page).to have_content "You can\'\ t delete answers you haven\'\ t created."
+     expect(page).to_not have_button("delete_answer_#{other_answer.id}")
    end
 
    scenario 'Non-authenticated user tries to delete somebody elses answer' do
      visit "questions/#{question.id}"
-     click_on "delete_answer_#{answer.id}"
-
-     expect(page).to have_content 'You need to sign in or sign up before continuing.'
+     expect(page).to_not have_button("delete_answer_#{other_answer.id}")
    end
  end

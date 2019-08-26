@@ -12,6 +12,8 @@
 //
 //= require jquery
 //= require rails-ujs
+//= require jquery-ui
+//= require bind-polyfill
 //= require activestorage
 //= require turbolinks
 //= require_tree .

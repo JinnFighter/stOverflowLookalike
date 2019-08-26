@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:answer) { create(:answer_to_question, user: @user) }
+  let!(:user) { create :user }
+  let!(:question) { create :question }
+  let(:answer) { create :answer, question: question, user: user }
 
   describe "GET index" do
     let(:answers) { create_list(:answer, 2) }
@@ -82,45 +84,64 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     describe "PATCH update" do
-      sign_in_user
+      let(:answer) { create(:answer, question: question, user: user) }
+      before do
+        sign_in(user)
+      end
 
-      context 'valid attributes' do
+      context 'edit own question' do
         it 'assigns the requested answer to @answer' do
-          patch :update, params: { id: answer, answer: attributes_for(:answer) }
+          patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
           expect(assigns(:answer)).to eq(answer)
         end
 
-        it 'changes question attributes' do
-          patch :update, params: { id: answer, answer: { body: "new answer" } }
+        it 'assigns the question' do
+          patch :update, params: { id: answer, question_id: question, answer: { body: "new answer" }, format: :js }
+          expect(assigns(:question)).to eq question
+        end
+
+        it 'changes answer attributes' do
+          patch :update, params: { id: answer, question_id: question, answer: { body: "new answer" }, format: :js }
           answer.reload
           expect(answer.body).to eq "new answer"
         end
 
-        it 'redirects to the updated answer' do
-          patch :update, params: { id: answer, answer: attributes_for(:answer) }
-          expect(response).to redirect_to answer
+        it 'render update template' do
+          patch :update, params: { id: answer, question_id: question, answer: attributes_for(:answer), format: :js }
+          expect(response).to render_template :update
         end
       end
 
-      context 'invalid attributes' do
-        before { patch :update, params: { id: answer, answer: { body: nil } } }
+      context 'edit someone elses question' do
+        it 'assigns the requested answer to @answer' do
+          patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
+          expect(assigns(:answer)).to eq(answer)
+        end
 
-        it 'does not change answer attributes' do
+        it 'assigns the question' do
+          patch :update, params: { id: answer, question_id: question, answer: { body: "new answer" }, format: :js }
+          expect(assigns(:question)).to eq question
+        end
+
+        it 'changes answer attributes' do
+          patch :update, params: { id: answer, question_id: question, answer: { body: "new answer" }, format: :js }
           answer.reload
-
-          expect(answer.body).to eq 'Test_body'
+          expect(answer.body).to eq "new answer"
         end
 
-        it 're-renders edit view' do
-          expect(response).to render_template :edit
+        it 'render update template' do
+          patch :update, params: { id: answer, question_id: question, answer: attributes_for(:answer), format: :js }
+          expect(response).to render_template :update
         end
       end
+
     end
 
     describe "DELETE destroy" do
-      sign_in_user
-      before { answer }
-
+      before do
+        sign_in(user)
+        answer
+      end
       it 'deletes answer' do
         expect{ delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
       end

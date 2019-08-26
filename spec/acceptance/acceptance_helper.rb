@@ -1,10 +1,16 @@
 require 'rails_helper'
 
 RSpec.configure do |config|
-  Capybara.javascript_driver = :webkit
+  Capybara.javascript_driver = :poltergeist
+
+  Capybara.register_driver :poltergeist do |app|
+    Capybara::Poltergeist::Driver.new(app, { js_errors: false })
+  end
 
   config.include AcceptanceHelper, type: :feature
-  
+
+  config.include WaitForAjax, type: :feature
+
   config.use_transactional_fixtures = false
 
   config.before(:suite) do
