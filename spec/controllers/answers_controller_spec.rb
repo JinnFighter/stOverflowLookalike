@@ -4,6 +4,7 @@ RSpec.describe AnswersController, type: :controller do
   let!(:user) { create :user }
   let!(:question) { create :question }
   let(:answer) { create :answer, question: question, user: user }
+  let(:other_answer) { create :answer, question: question }
 
   describe "GET index" do
     let(:answers) { create_list(:answer, 2) }
@@ -140,16 +141,32 @@ RSpec.describe AnswersController, type: :controller do
     describe "DELETE destroy" do
       before do
         sign_in(user)
-        answer
       end
 
-      it 'deletes answer' do
-        expect{ delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
+      context 'by author' do
+        before { answer }
+
+        it 'deletes answer' do
+          expect{ delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
+        end
+
+        it 'renders destroy template' do
+          delete :destroy, params: { id: answer }, format: :js
+          expect(response).to render_template :destroy
+        end
       end
 
-      it 'renders destroy template' do
-        delete :destroy, params: { id: answer }, format: :js
-        expect(response).to render_template :destroy
+      context 'not by author' do
+        before { other_answer }
+        
+        it 'does not delete answer' do
+          expect { delete :destroy, params: { id: other_answer, format: :js } }.to_not change(Answer, :count)
+        end
+
+        it 're-renders show template' do
+          delete :destroy, params: { id: other_answer, format: :js }
+          expect(response).to redirect_to answer_path(other_answer)
+        end
       end
     end
   end
