@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :load_answer, only: [:show, :edit, :update, :destroy]
+  before_action :load_answer, only: [:show, :edit, :update, :destroy, :set_best]
 
   def index
     @answers = Answer.all
@@ -45,6 +45,13 @@ class AnswersController < ApplicationController
       respond_to do |format|
         format.js { flash.now[:notice] = "You can\'\ t delete answers you haven\'\ t created." }
       end
+    end
+  end
+
+  def set_best
+    @question = @answer.question
+    if @question.user_id == current_user.id
+      @answer.set_best! 
     end
   end
 

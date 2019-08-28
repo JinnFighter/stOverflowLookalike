@@ -3,12 +3,19 @@ Answers: <br>
   <% @question.answers.each do |a| %>
    <% if a.persisted? %>
     <div id="answer_body_<%= a.id %>">
+      <% if a.best_answer %>
+        Best Answer:
+      <% end %>
       <%= a.body %>
       <% if user_signed_in? %>
         <%= form_for [@question, a], remote: true, html: { id: "edit-answer-#{a.id}" } do |f| %>
           <%= f.label :body, 'edit_answer_body' %>
           <%= f.text_area :body %>
           <%= f.submit 'Save' %>
+        <% end %>
+
+        <% if current_user.id == @question.user_id && !a.best_answer %>
+          <%= link_to 'Mark as best', set_best_answer_path(a), class: 'mark-best-link', id: "mark-best-link-#{a.id}", method: :patch, remote: true %>
         <% end %>
 
         <% if current_user.id == a.user_id %>

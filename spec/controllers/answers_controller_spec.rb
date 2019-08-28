@@ -2,9 +2,11 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let!(:user) { create :user }
-  let!(:question) { create :question }
+  let!(:question) { create :question, user: user }
   let(:answer) { create :answer, question: question, user: user }
   let(:other_answer) { create :answer, question: question }
+  let!(:other_question) { create :question }
+  let(:third_answer) { create :answer, question: other_question }
 
   describe "GET index" do
     let(:answers) { create_list(:answer, 2) }
@@ -135,7 +137,6 @@ RSpec.describe AnswersController, type: :controller do
           expect(response).to render_template :update
         end
       end
-
     end
 
     describe "DELETE destroy" do
@@ -158,7 +159,7 @@ RSpec.describe AnswersController, type: :controller do
 
       context 'not by author' do
         before { other_answer }
-        
+
         it 'does not delete answer' do
           expect { delete :destroy, params: { id: other_answer, format: :js } }.to_not change(Answer, :count)
         end
@@ -166,6 +167,58 @@ RSpec.describe AnswersController, type: :controller do
         it 're-renders show template' do
           delete :destroy, params: { id: other_answer, format: :js }
           expect(response).to redirect_to answer_path(other_answer)
+        end
+      end
+    end
+
+    describe 'Mark as best' do
+      before do
+        sign_in(user)
+      end
+
+      context 'as author of question' do
+        it 'assigns the requested answer to @answer' do
+          patch :set_best, params: { id: answer, format: :js }
+          expect(assigns(:answer)).to eq(answer)
+        end
+
+        it 'assigns the question' do
+          patch :set_best, params: { id: answer, question_id: question, format: :js }
+          expect(assigns(:question)).to eq(question)
+        end
+
+        it 'changes answer best attribute' do
+          patch :set_best, params: { id: answer, question_id: question, answer: { best_answer: true }, format: :js }
+          answer.reload
+          expect(answer.best_answer).to eq true
+        end
+
+        it 'renders set_best template' do
+          patch :set_best, params: { id: answer, question_id: question, answer: { best_answer: true }, format: :js }
+          expect(response).to render_template :set_best
+        end
+      end
+
+      context 'not as author of question' do
+        it 'assigns the requested answer to @answer' do
+          patch :set_best, params: { id: third_answer, format: :js }
+          expect(assigns(:answer)).to eq(third_answer)
+        end
+
+        it 'assigns the question' do
+          patch :set_best, params: { id: third_answer, question_id: other_question, format: :js }
+          expect(assigns(:question)).to eq(other_question)
+        end
+
+        it 'does not change answer best attribute' do
+          patch :set_best, params: { id: third_answer, question_id: other_question, answer: { best_answer: true }, format: :js }
+          answer.reload
+          expect(answer.best_answer).to eq false
+        end
+
+        it 'renders set_best template' do
+          patch :set_best, params: { id: third_answer, question_id: other_question, answer: { best_answer: true }, format: :js }
+          expect(response).to render_template :set_best
         end
       end
     end

@@ -6,6 +6,10 @@ Rails.application.routes.draw do
     resources :answers
   end
 
-  resources :answers
+  resources :answers do
+    member do
+      patch 'set_best'
+    end
+  end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
