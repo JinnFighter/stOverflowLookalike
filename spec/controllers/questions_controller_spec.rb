@@ -140,24 +140,24 @@ RSpec.describe QuestionsController, type: :controller do
       before { question }
 
       it 'deletes question' do
-        expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+        expect { delete :destroy, params: { id: question, format: :js } }.to change(Question, :count).by(-1)
       end
 
       it 'redirects to index view' do
-        delete :destroy, params: { id: question }
+        delete :destroy, params: { id: question, format: :js }
         expect(response).to redirect_to questions_path
       end
     end
 
     context 'not by author' do
       before { other_question }
-      
+
       it 'does not delete question' do
-        expect { delete :destroy, params: { id: other_question } }.to_not change(Question, :count)
+        expect { delete :destroy, params: { id: other_question, format: :js } }.to_not change(Question, :count)
       end
 
       it 're-renders question view' do
-        delete :destroy, params: { id: other_question }
+        delete :destroy, params: { id: other_question, format: :js }
         expect(response).to redirect_to questions_path
       end
     end
