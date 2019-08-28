@@ -1,8 +1,18 @@
 <%= link_to 'Back', questions_path %><br>
-<%= button_to 'Delete question', @question, method: :delete  %>
+<% if user_signed_in? %>
+  <% if @question.user_id == current_user.id %>
+    <p> <%= link_to 'Edit question', '', class: 'edit-question-link', data: { question_id: @question.id }, remote: true %> </p>
+    <p> <%= button_to 'Delete question', @question, method: :delete  %> </p>
+  <% end %>
+<% end %>
+
 <div id='question_data'>
- <%= @question.title %><br>
- <%= @question.body %><br>
+  <%= render 'question_data' %>
+    <%= form_for @question, html: { id: "edit-question-#{@question.id}" }, remote: true do |form| %>
+      <%= form.label :body, 'edit_question_body' %>
+      <%= form.text_area :body %>
+      <%= form.submit 'Save' %>
+    <% end %>
 </div>
 
 <div id='answers'>

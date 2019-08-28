@@ -31,10 +31,12 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if @question.update(question_params)
-      redirect_to @question
+    if current_user.id == @question.user_id
+      @question.update(question_params)
     else
-      render :edit
+      respond_to do |format|
+        format.js { flash.now[:notice] = 'You cannot edit questions you have not created.' }
+      end
     end
   end
 

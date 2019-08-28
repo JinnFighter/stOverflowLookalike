@@ -1,2 +1,3 @@
-<p><%= @answer.body %></p>
-<%= button_to 'Delete this answer', @answer, {id: "delete_answer_#{@answer.id}", method: :delete} %>
+<p> <%= @answer.body %> </p>
+<%= link_to 'Edit', '', class: 'edit-answer-link', id: "edit-answer-link-#{@answer.id}", data: { answer_id: @answer.id }, remote: true %>
+<%= button_to 'Delete this answer', @answer, { id: "delete_answer_#{@answer.id}", method: :delete } %>

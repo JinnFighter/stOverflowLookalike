@@ -10,9 +10,9 @@ I want to be able to delete questions
   given(:other_question) { create(:question) }
 
   scenario 'Authenticated user deletes his question' do
-    sign_in(question.user)
+    sign_in(user)
 
-    visit "questions/#{question.id}"
+    visit question_path(question)
     click_on 'Delete question'
 
     expect(page).to have_content 'Question was successfully deleted.'
@@ -21,16 +21,14 @@ I want to be able to delete questions
   scenario 'Authenticated user tries to delete somebody elses question' do
     sign_in(user)
 
-    visit "questions/#{other_question.id}"
-    click_on 'Delete question'
+    visit question_path(other_question)
 
-    expect(page).to have_content "You can\'\ t delete questions you haven\'\ t created."
+    expect(page).to_not have_button('Delete question')
   end
 
   scenario 'Non-Authenticated user tries to delete somebody elses question' do
-    visit "questions/#{question.id}"
-    click_on 'Delete question'
+    visit question_path(question)
 
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    expect(page).to_not have_button('Delete question')
   end
 end

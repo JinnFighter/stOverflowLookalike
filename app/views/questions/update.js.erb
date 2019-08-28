@@ -1,0 +1,9 @@
+<% if @question.errors.present? %>
+  <% @question.errors.full_messages.each do |message| %>
+    $('.question_errors').html('<%= j message %>');
+  <% end %>
+<% else %>
+  $('#question_data').html('<%= j render 'questions/question_data' %>');
+<% end %>
+
+$("#flash").html('<%= j render partial: "shared/notice_banner" %>');
