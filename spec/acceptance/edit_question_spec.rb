@@ -7,6 +7,7 @@ I want to be able to edit my questions
 } do
   given(:user) { create :user }
   given(:question) { create :question, user: user }
+  given(:other_question) { create :question }
 
   scenario 'Unauthenticated user tries to edit question' do
     visit question_path(question)
@@ -38,6 +39,11 @@ I want to be able to edit my questions
         expect(page).to_not have_selector 'textarea'
       end
     end
-    scenario 'tries to edit somebody elses question'
+
+    scenario 'tries to edit somebody elses question' do
+      visit question_path(other_question)
+
+      expect(page).to_not have_link 'Edit question'
+    end
   end
 end
