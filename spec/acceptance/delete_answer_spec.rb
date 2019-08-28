@@ -10,25 +10,27 @@ feature 'Delete answer', %q{
    given!(:answer) { create :answer, question: question, user: user }
    given!(:other_answer) { create :answer, question: question }
 
-   scenario 'Authenticated user deletes his answer' do
-     sign_in(user)
-
-     visit "questions/#{question.id}"
-     within "#answers" do
-     click_on "delete_answer_#{answer.id}"
-   end
-     expect(page).to have_content 'Your answer was successfully deleted.'
-   end
-
-   scenario 'Authenticated user tries to delete somebody elses answer' do
-     sign_in(user)
-
-     visit "questions/#{question.id}"
-     expect(page).to_not have_button("delete_answer_#{other_answer.id}")
-   end
-
    scenario 'Non-authenticated user tries to delete somebody elses answer' do
-     visit "questions/#{question.id}"
+     visit question_path(question)
      expect(page).to_not have_button("delete_answer_#{other_answer.id}")
+   end
+
+   describe 'Authenticated user' do
+     before do
+       sign_in(user)
+       visit question_path(question)
+     end
+
+     scenario 'deletes his answer', js: true do
+       within "#answers" do
+         click_on "delete_answer_#{answer.id}"
+       end
+
+       expect(page).to_not have_css("answer_body_#{ answer.id }")
+     end
+
+     scenario 'tries to delete somebody elses answer' do
+       expect(page).to_not have_button("delete_answer_#{ other_answer.id }")
+     end
    end
  end

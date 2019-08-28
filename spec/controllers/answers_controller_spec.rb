@@ -129,7 +129,7 @@ RSpec.describe AnswersController, type: :controller do
           expect(answer.body).to eq "new answer"
         end
 
-        it 'render update template' do
+        it 'renders update template' do
           patch :update, params: { id: answer, question_id: question, answer: attributes_for(:answer), format: :js }
           expect(response).to render_template :update
         end
@@ -142,13 +142,14 @@ RSpec.describe AnswersController, type: :controller do
         sign_in(user)
         answer
       end
+
       it 'deletes answer' do
-        expect{ delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+        expect{ delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
       end
 
-      it 'redirects to index view' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to answers_path
+      it 'renders destroy template' do
+        delete :destroy, params: { id: answer }, format: :js
+        expect(response).to render_template :destroy
       end
     end
   end

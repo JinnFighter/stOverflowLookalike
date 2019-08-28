@@ -2,21 +2,21 @@
 Answers: <br>
   <% @question.answers.each do |a| %>
    <% if a.persisted? %>
-    <p><%= a.body %></p>
-    <% if user_signed_in? %>
-
+    <div id="answer_body_<%= a.id %>">
+      <%= a.body %>
+      <% if user_signed_in? %>
         <%= form_for [@question, a], remote: true, html: { id: "edit-answer-#{a.id}" } do |f| %>
           <%= f.label :body, 'edit_answer_body' %>
           <%= f.text_area :body %>
           <%= f.submit 'Save' %>
         <% end %>
+
         <% if current_user.id == a.user_id %>
-          <p> <%= link_to 'Edit', '', class: 'edit-answer-link', id: "edit-answer-link-#{a.id}", data: { answer_id: a.id }, remote: true %> </p>
-          <p> <%= button_to 'Delete this answer', a, { id: "delete_answer_#{a.id}", method: :delete } %> </p>
+          <%= link_to 'Edit', '', class: 'edit-answer-link', id: "edit-answer-link-#{a.id}", data: { answer_id: a.id }, remote: true %>
+          <%= button_to 'Delete this answer', a, { id: "delete_answer_#{a.id}", method: :delete, remote: true } %>
         <% end %>
       <% end %>
-
-
-    <% end %>
+    </div>
+   <% end %>
   <% end %>
 <% end %>

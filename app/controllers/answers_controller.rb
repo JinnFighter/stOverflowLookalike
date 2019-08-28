@@ -41,11 +41,11 @@ class AnswersController < ApplicationController
   def destroy
     if @answer.user_id == current_user.id
       @answer.destroy
-      flash[:notice] = 'Your answer was successfully deleted.'
     else
-      flash[:notice] = "You can\'\ t delete answers you haven\'\ t created."
+      respond_to do |format|
+        format.js { flash.now[:notice] = "You can\'\ t delete answers you haven\'\ t created." }
+      end
     end
-    redirect_to answers_path
   end
 
   private
