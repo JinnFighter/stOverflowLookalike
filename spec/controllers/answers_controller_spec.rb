@@ -89,7 +89,7 @@ RSpec.describe AnswersController, type: :controller do
         sign_in(user)
       end
 
-      context 'edit own question' do
+      context 'edit own answer' do
         it 'assigns the requested answer to @answer' do
           patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
           expect(assigns(:answer)).to eq(answer)
@@ -112,7 +112,7 @@ RSpec.describe AnswersController, type: :controller do
         end
       end
 
-      context 'edit someone elses question' do
+      context 'edit someone elses answer' do
         it 'assigns the requested answer to @answer' do
           patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
           expect(assigns(:answer)).to eq(answer)
