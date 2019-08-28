@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question, user: @user) }
+  let!(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
+  let(:other_question) { create(:question) }
+
   describe 'GET #index' do
     let(:questions) { create_list(:question, 2) }
     before { get :index }
@@ -31,9 +34,10 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #new' do
-    sign_in_user
-
-    before { get :new }
+    before do
+      sign_in(user)
+      get :new
+    end
 
     it 'assigns a new Question to @question' do
       expect(assigns(:question)).to be_a_new(Question)
@@ -45,9 +49,10 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #edit' do
-    sign_in_user
-
-    before { get :edit, params: { id: question } }
+    before do
+      sign_in(user)
+      get :edit, params: { id: question }
+    end
 
     it 'assigns the requested question to @question' do
       expect(assigns(:question)).to eq question
@@ -59,7 +64,10 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
-    sign_in_user
+    before do
+      sign_in(user)
+    end
+
     context 'with valid attributes' do
       it 'saves the new question in the database' do
         expect{ post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
@@ -72,7 +80,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid attributes' do
-
       it 'does not save the question' do
         expect { post :create, params: { question: attributes_for(:invalid_question) } }.to_not change(Question, :count)
       end
@@ -85,7 +92,10 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    sign_in_user
+    before do
+      sign_in(user)
+    end
+
     context 'valid attributes' do
       it 'assigns the requested question to @question' do
         patch :update, params: { id: question, question: attributes_for(:question), format: :js }
@@ -107,6 +117,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'invalid attributes' do
       before { patch :update, params: { id: question, question: { title: 'new title', body: nil }, format: :js } }
+
       it 'does not change question attributes' do
 
         question.reload
@@ -121,15 +132,34 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    sign_in_user
-    before { question }
-    it 'deletes question' do
-      expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+    before do
+      sign_in(user)
     end
 
-    it 'redirects to index view' do
-      delete :destroy, params: { id: question }
-      expect(response).to redirect_to questions_path
+    context 'by author' do
+      before { question }
+
+      it 'deletes question' do
+        expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+      end
+
+      it 'redirects to index view' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to questions_path
+      end
+    end
+
+    context 'not by author' do
+      before { other_question }
+      
+      it 'does not delete question' do
+        expect { delete :destroy, params: { id: other_question } }.to_not change(Question, :count)
+      end
+
+      it 're-renders question view' do
+        delete :destroy, params: { id: other_question }
+        expect(response).to redirect_to questions_path
+      end
     end
   end
 end
