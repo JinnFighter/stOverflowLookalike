@@ -3,6 +3,12 @@
     <%= form.text_field :title %>
     <%= form.label :body %>
     <%= form.text_area :body, rows: 8 %>
-
+    <p> Attachments: </p>
+    <p>
+       <%= form.fields_for :attachments do |att| %>
+        <%= att.label :file %>
+        <%= att.file_field :file %>
+      <% end %>
+     </p>
     <%= form.submit 'Create' %>
 <% end %>

@@ -1,2 +1,8 @@
 <%= @question.title %><br>
 <%= @question.body %><br>
+Attachments:<br>
+<ul>
+  <% @question.attachments.each do |att| %>
+  <li> <%= att.file.file.filename %> </li>
+  <% end %>
+</ul>

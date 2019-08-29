@@ -13,6 +13,7 @@ class QuestionsController < ApplicationController
 
   def new
     @question = current_user.questions.new
+    @question.attachments.build
   end
 
   def edit
