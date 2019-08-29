@@ -14,10 +14,10 @@ I want to be able to attach files to my answers
     visit question_path(question)
   end
 
-  scenario 'User adds file when leaves answer' do
+  scenario 'User adds file when leaves answer', js: true do
     fill_in 'Answer_to_question', with: 'My answer'
     attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
-    click_on 'Create'
+    click_on 'Send answer'
 
     within '#answers' do
       expect(page).to have_link 'spec_helper.rb', href: '/uploads/attachment/file/1/spec_helper.rb'

@@ -1,3 +1,8 @@
 <p> <%= @answer.body %> </p>
+<ul>
+  <% @answer.attachments.each do |att| %>
+  <li> <%= link_to att.file.identifier, att.file.url %> </li>
+  <% end %>
+</ul>
 <%= link_to 'Edit', '', class: 'edit-answer-link', id: "edit-answer-link-#{@answer.id}", data: { answer_id: @answer.id }, remote: true %>
 <%= button_to 'Delete this answer', @answer, { id: "delete_answer_#{@answer.id}", method: :delete } %>

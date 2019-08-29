@@ -7,6 +7,13 @@ Answers: <br>
         Best Answer:
       <% end %>
       <%= a.body %>
+
+      <ul>
+        <% a.attachments.each do |att| %>
+        <li> <%= link_to att.file.identifier, att.file.url %> </li>
+        <% end %>
+      </ul>
+
       <% if user_signed_in? %>
         <%= form_for [@question, a], remote: true, html: { id: "edit-answer-#{a.id}" } do |f| %>
           <%= f.label :body, 'edit_answer_body' %>
