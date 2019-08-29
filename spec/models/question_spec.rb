@@ -7,6 +7,8 @@ RSpec.describe Question, type: :model do
   it { should belong_to(:user) }
   it { should have_many :attachments }
 
+  it { should accept_nested_attributes_for :attachments }
+
   it 'validates presence of title' do
     expect(Question.new(body: '123')).to_not be_valid
   end
