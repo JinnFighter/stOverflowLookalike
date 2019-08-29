@@ -3,6 +3,6 @@
 Attachments:<br>
 <ul>
   <% @question.attachments.each do |att| %>
-  <li> <%= att.file.file.filename %> </li>
+  <li> <%= link_to att.file.identifier, att.file.url %> </li>
   <% end %>
 </ul>
