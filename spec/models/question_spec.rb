@@ -5,6 +5,7 @@ RSpec.describe Question, type: :model do
   it { should validate_presence_of(:body) }
   it { should have_many(:answers) }
   it { should belong_to(:user) }
+  it { should have_many :attachments }
 
   it 'validates presence of title' do
     expect(Question.new(body: '123')).to_not be_valid

@@ -57,6 +57,7 @@ group :development, :test do
   gem 'capybara-webkit'
   gem 'poltergeist'
   gem 'rails-assets-bind-polyfill'
+  gem 'carrierwave'
 end
 
 group :development do
