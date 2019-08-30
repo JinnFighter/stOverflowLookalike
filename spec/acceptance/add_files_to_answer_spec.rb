@@ -16,6 +16,10 @@ I want to be able to attach files to my answers
 
   scenario 'User adds file when leaves answer', js: true do
     fill_in 'Answer_to_question', with: 'My answer'
+    
+    click_on 'add file'
+    wait_for_ajax
+
     attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
     click_on 'Send answer'
 
