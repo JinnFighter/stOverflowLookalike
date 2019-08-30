@@ -22,12 +22,11 @@
 
    </div>
    <%= form.text_area :body, size: "25x12", id: 'Answer_to_question' %>
-   <p>
      <%= form.fields_for :attachments do |att| %>
-      <%= att.label :file %>
-      <%= att.file_field :file %>
+      <div class='links'>
+        <%= link_to_add_association 'add file', form, :attachments, partial: 'attachment_fields' %>
+      </div>
      <% end %>
-   </p>
    <% if(!current_user.nil?) %>
     <%= form.hidden_field :user_id, value: current_user.id %>
    <% end %>
