@@ -6,8 +6,9 @@
     <p> Attachments: </p>
     <p>
        <%= form.fields_for :attachments do |att| %>
-        <%= att.label :file %>
-        <%= att.file_field :file %>
+        <div class='links'>
+          <%= link_to_add_association 'add file', form, :attachments, partial: 'attachment_fields' %>
+        </div>
       <% end %>
      </p>
     <%= form.submit 'Create' %>

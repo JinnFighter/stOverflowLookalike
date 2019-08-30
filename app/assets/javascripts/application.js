@@ -15,6 +15,7 @@
 //= require rails-ujs
 //= require jquery-ui
 //= require bind-polyfill
+//= require cocoon
 //= require activestorage
 //= require turbolinks
 //= require_tree .
