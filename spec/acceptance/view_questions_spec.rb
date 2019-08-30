@@ -7,6 +7,7 @@ feature 'View questions list', %q{
  } do
    given(:user) { create(:user) }
    given(:questions) { Questions.all }
+   
    scenario 'Authenticated user views questions list' do
      sign_in(user)
 

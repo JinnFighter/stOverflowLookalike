@@ -88,6 +88,17 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
+    context 'with valid attributes and attachment' do
+      it 'saves the new question in the database' do
+        expect { post :create, params: { question: attributes_for(:question, :with_file) } }.to change(Question, :count).by(1)
+      end
+
+      it 'redirects to show view' do
+        post :create, params: { question: attributes_for(:question, :with_file) }
+        expect(response).to redirect_to question_path(assigns(:question))
+      end
+    end
+
     context 'with invalid attributes' do
       it 'does not save the question' do
         expect { post :create, params: { question: attributes_for(:invalid_question) } }.to_not change(Question, :count)

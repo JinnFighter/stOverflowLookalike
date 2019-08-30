@@ -28,6 +28,11 @@ class QuestionsController < ApplicationController
       flash[:notice] = 'Your question was successfully created.'
       redirect_to @question
     else
+      if @question.errors.present?
+        @question.errors.full_messages.each do |message|
+          flash[:notice] = message + '.\n'
+        end
+      end
       render :new
     end
   end
