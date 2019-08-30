@@ -68,8 +68,19 @@ RSpec.describe AnswersController, type: :controller do
           expect{ post :create, params: { answer: attributes_for(:answer_to_question), question_id: parent_question, format: :js } }.to change(parent_question.answers, :count).by(1)
         end
 
-        it 'redirects to question show view' do
+        it 'renders create template' do
           post :create, params: { answer: attributes_for(:answer_to_question), question_id: parent_question, format: :js }
+          expect(response).to render_template :create
+        end
+      end
+
+      context 'with valid attributes and attachment' do
+        it 'saves new answer in the database' do
+          expect{ post :create, params: { answer: attributes_for(:answer, :with_file), question_id: question, format: :js } }.to change(Answer, :count).by(1)
+        end
+
+        it 'renders create template' do
+          post :create, params: { answer: attributes_for(:answer, :with_file), question_id: question, format: :js }
           expect(response).to render_template :create
         end
       end

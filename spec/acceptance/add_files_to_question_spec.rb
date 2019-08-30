@@ -55,6 +55,8 @@ I want to be able to attach files
 
      click_on 'Create'
 
-     expect(page).to have_content "Attachments file can't be blank."
+     within '.answer_errors' do
+       expect(page).to have_content "Attachments file can't be blank."
+     end
    end
  end

@@ -15,6 +15,12 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     if @answer.save
       flash[:notice] = 'Your answer was successfully added.'
+    else
+      if @answer.errors.present?
+        @answer.errors.full_messages.each do |message|
+          flash[:notice] = message + '.\n'
+        end
+      end
     end
   end
 
@@ -51,7 +57,7 @@ class AnswersController < ApplicationController
   def set_best
     @question = @answer.question
     if @question.user_id == current_user.id
-      @answer.set_best! 
+      @answer.set_best!
     end
   end
 
